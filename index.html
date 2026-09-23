@@ -73,7 +73,7 @@
             
             <!-- P0-P11 リスト表示 -->
             <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 border-b pb-2 mb-4">1. 基本形 (Prime: P0〜P11)</h2>
+                <h2 class="text-2xl font-bold text-gray-800 border-b pb-2 mb-4">1. 基本形 (Prime:P0)</h2>
                 <div id="primeList" class="font-mono text-lg bg-gray-50 p-4 rounded-lg overflow-x-auto whitespace-pre">
                     <!-- JavaScriptでここにリストが挿入されます -->
                 </div>
@@ -188,9 +188,9 @@
             hideError();
             resultsArea.classList.remove('hidden');
 
-            // --- 1. 基本形 (P0〜P11) の描画 ---
+            // --- 1. 基本形の描画 ---
             let listHTML = '';
-            for (let i = 0; i < 12; i++) {
+            for (let i = 0; i < 1; i++) {
                 const transposed = transpose(primeRow, i);
                 const notesStr = transposed.map(n => intToNote(n).padEnd(3, ' ')).join(' ');
                 const label = `P${i}`.padEnd(3, ' ');
@@ -285,10 +285,10 @@
             // UIの表示を更新
             if (remaining.length === 0 && usedNotes.size === 12 && parts.length === 12) {
                 // ぴったり12個揃った場合
-                remainingNotesContainer.innerHTML = '<span class="text-emerald-600 font-bold">✨ 12音すべて揃いました！</span>';
+                remainingNotesContainer.innerHTML = '<span class="text-emerald-600 font-bold">すべての音が使われています。</span>';
             } else if (parts.length > 12) {
                 // 音が多すぎる場合
-                remainingNotesContainer.innerHTML = '<span class="text-red-500 font-bold">※ 音が多すぎます（12個を超えています）</span>';
+                remainingNotesContainer.innerHTML = '<span class="text-red-500 font-bold">※ 音が多すぎます！（12個を超えています）</span>';
             } else {
                 // 通常時（残りの音を表示）
                 remainingNotesContainer.innerHTML = `残りの音: <span class="font-mono font-medium text-indigo-600 tracking-wider">${remaining.join(' ')}</span>`;
