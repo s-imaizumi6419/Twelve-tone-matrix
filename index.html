@@ -34,7 +34,7 @@
             
             <div class="mb-4">
                 <label for="noteInput" class="block text-sm font-medium text-gray-600 mb-1">
-                    12の音をスペースまたはカンマ区切りで入力してください (例: C C# D D# E F F# G G# A A# B)
+                    12の音をスペースまたはカンマ区切りで入力してください。
                 </label>
                 <div class="flex flex-col sm:flex-row gap-3">
                     <input type="text" id="noteInput" 
@@ -45,6 +45,11 @@
                     </button>
                 </div>
                 <p class="text-xs text-gray-500 mt-2">※ フラット (Db, Eb, Gb, Ab, Bb) も入力可能です。</p>
+                
+                <!-- 【追加部分】残りの音を表示するコンテナ -->
+                <div id="remainingNotesContainer" class="mt-3 text-sm text-gray-600 bg-gray-50 p-2 rounded border border-gray-200">
+                    残りの音: <span id="remainingNotesList" class="font-mono font-medium text-indigo-600 tracking-wider">C C# D D# E F F# G G# A A# B</span>
+                </div>
             </div>
 
             <div class="flex items-center gap-4">
@@ -111,6 +116,8 @@
         const matrixHead = document.getElementById('matrixHead');
         const matrixBody = document.getElementById('matrixBody');
         const matrixFoot = document.getElementById('matrixFoot');
+        // 【追加部分】残りの音コンテナを取得
+        const remainingNotesContainer = document.getElementById('remainingNotesContainer');
 
         // 音名を数値(0-11)に変換
         function noteToInt(noteStr) {
@@ -123,7 +130,6 @@
 
         // 数値を音名に変換
         function intToNote(noteInt) {
-            // 負の値や12以上の値に対応するために剰余の計算を工夫
             return NOTES[(noteInt % 12 + 12) % 12];
         }
 
@@ -154,7 +160,6 @@
         }
 
         function validateInput(inputStr) {
-            // カンマをスペースに変換し、連続するスペースで分割
             const parts = inputStr.replace(/,/g, ' ').trim().split(/\s+/).filter(Boolean);
             
             if (parts.length !== 12) {
@@ -170,7 +175,6 @@
                 rowInts.push(val);
             }
 
-            // 重複チェック (Setを使ってユニークな要素数を数える)
             const uniqueNotes = new Set(rowInts);
             if (uniqueNotes.size !== 12) {
                 return { error: "エラー: 12の音がすべて1回ずつ使われていません（重複があります）。" };
@@ -195,14 +199,10 @@
             primeList.textContent = listHTML;
 
             // --- 2. 12音マトリクスの描画 ---
-            
-            // 反行形(I)と逆行の反行形(RI)の音程を計算
             const firstNote = primeRow[0];
             const iIntervals = primeRow.map(n => (n - firstNote + 12) % 12);
-            // 行の移高幅 (Inversion)
             const pIntervals = iIntervals.map(i => (12 - i) % 12);
 
-            // ヘッダー (I0-I11)
             let headHTML = '<tr><th class="border-r border-indigo-200"></th>';
             iIntervals.forEach(intVal => {
                 headHTML += `<th>I${intVal}</th>`;
@@ -210,28 +210,23 @@
             headHTML += '<th class="border-l border-indigo-200"></th></tr>';
             matrixHead.innerHTML = headHTML;
 
-            // ボディ (P列, 音符, R列)
             let bodyHTML = '';
             for (let r = 0; r < 12; r++) {
                 const pInt = pIntervals[r];
                 const rowNotes = transpose(primeRow, pInt);
                 
                 bodyHTML += `<tr>`;
-                // 左側のP表記
                 bodyHTML += `<td class="font-bold text-indigo-900 bg-indigo-50 border-r border-indigo-200 border-b border-gray-200">P${pInt}</td>`;
                 
-                // 真ん中の音符
                 rowNotes.forEach(n => {
                     bodyHTML += `<td class="border border-gray-200 hover:bg-indigo-100 transition-colors cursor-default">${intToNote(n)}</td>`;
                 });
                 
-                // 右側のR表記
                 bodyHTML += `<td class="font-bold text-indigo-900 bg-indigo-50 border-l border-indigo-200 border-b border-gray-200">R${pInt}</td>`;
                 bodyHTML += `</tr>`;
             }
             matrixBody.innerHTML = bodyHTML;
 
-            // フッター (RI0-RI11)
             let footHTML = '<tr><th class="border-r border-indigo-200"></th>';
             iIntervals.forEach(intVal => {
                 footHTML += `<th>RI${intVal}</th>`;
@@ -240,7 +235,7 @@
             matrixFoot.innerHTML = footHTML;
         }
 
-        // マトリクス生成ボタンの処理
+        // マトリクス生成ボタン
         generateBtn.addEventListener('click', () => {
             const inputVal = noteInput.value;
             if (!inputVal) {
@@ -256,20 +251,57 @@
             }
         });
 
-        // エンターキーでの送信対応
+        // エンターキー対応
         noteInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 generateBtn.click();
             }
         });
 
+        // 【追加部分】入力中のリアルタイム残音チェック処理
+        noteInput.addEventListener('input', () => {
+            const inputVal = noteInput.value;
+            // 入力された文字を分割
+            const parts = inputVal.replace(/,/g, ' ').trim().split(/\s+/).filter(Boolean);
+            
+            // 入力された有効な音を収集 (Setを使って重複を排除)
+            const usedNotes = new Set();
+            for (let p of parts) {
+                const val = noteToInt(p);
+                if (val !== -1) {
+                    usedNotes.add(val);
+                }
+            }
+
+            // まだ使われていない音を計算
+            const remaining = [];
+            for (let i = 0; i < 12; i++) {
+                if (!usedNotes.has(i)) {
+                    remaining.push(NOTES[i]);
+                }
+            }
+
+            // UIの表示を更新
+            if (remaining.length === 0 && usedNotes.size === 12 && parts.length === 12) {
+                // ぴったり12個揃った場合
+                remainingNotesContainer.innerHTML = '<span class="text-emerald-600 font-bold">✨ 12音すべて揃いました！</span>';
+            } else if (parts.length > 12) {
+                // 音が多すぎる場合
+                remainingNotesContainer.innerHTML = '<span class="text-red-500 font-bold">※ 音が多すぎます（12個を超えています）</span>';
+            } else {
+                // 通常時（残りの音を表示）
+                remainingNotesContainer.innerHTML = `残りの音: <span class="font-mono font-medium text-indigo-600 tracking-wider">${remaining.join(' ')}</span>`;
+            }
+        });
+
         // ランダム生成ボタンの処理
         randomBtn.addEventListener('click', () => {
-            // 0から11までの配列を作成してシャッフル
             const randomRow = shuffle([...Array(12).keys()]);
-            // 入力欄に音名をセット（視覚的なフィードバック）
             noteInput.value = randomRow.map(n => intToNote(n)).join(' ');
-            // そのまま結果を描画
+            
+            // 【追加部分】残りの音の表示を「揃いました！」に更新させるため、強制的にinputイベントを発火
+            noteInput.dispatchEvent(new Event('input'));
+            
             renderResults(randomRow);
         });
 
