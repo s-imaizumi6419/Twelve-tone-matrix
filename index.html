@@ -38,7 +38,7 @@
                 </label>
                 <div class="flex flex-col sm:flex-row gap-3">
                     <input type="text" id="noteInput" 
-                        class="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all uppercase"
+                        class="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                         placeholder="C C# D D# E F F# G G# A A# B">
                     <button id="generateBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors shadow-sm whitespace-nowrap">
                         マトリクス生成
@@ -103,7 +103,8 @@
         // 音名の定義
         const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         const FLAT_TO_SHARP = {
-            'DB': 'C#', 'EB': 'D#', 'GB': 'F#', 'AB': 'G#', 'BB': 'A#'
+            'DB': 'C#', 'EB': 'D#', 'GB': 'F#', 'AB': 'G#', 'BB': 'A#',
+            'CB': 'B', 'FB': 'E', 'E#': 'F', 'B#': 'C'
         };
 
         // DOM要素の取得
