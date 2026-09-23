@@ -1,1 +1,1 @@
-# Twelve-tone-matrix-
+## How to use Twelve-tone-matrix
