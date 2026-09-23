@@ -71,9 +71,9 @@
 
         <div id="resultsArea" class="hidden space-y-8">
             
-            <!-- P0-P11 リスト表示 -->
+            <!-- P0 リスト表示 -->
             <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 border-b pb-2 mb-4">1. 基本形 (Prime:P0)</h2>
+                <h2 class="text-2xl font-bold text-gray-800 border-b pb-2 mb-4">基本形 (Prime P0)</h2>
                 <div id="primeList" class="font-mono text-lg bg-gray-50 p-4 rounded-lg overflow-x-auto whitespace-pre">
                     <!-- JavaScriptでここにリストが挿入されます -->
                 </div>
@@ -81,7 +81,7 @@
 
             <!-- マトリクス表示 -->
             <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <h2 class="text-2xl font-bold text-gray-800 border-b pb-2 mb-4">2. 12音マトリクス (Tone Row Matrix)</h2>
+                <h2 class="text-2xl font-bold text-gray-800 border-b pb-2 mb-4">12音マトリクス (Tone Row Matrix)</h2>
                 <p class="text-sm text-gray-600 mb-6">
                     ※ 横に右へ読むと基本形(P)、左へ読むと逆行形(R)、<br class="sm:hidden">
                     縦に下へ読むと反行形(I)、上へ読むと逆行の反行形(RI)になります。
@@ -188,18 +188,12 @@
             hideError();
             resultsArea.classList.remove('hidden');
 
-            // --- 1. 基本形の描画 ---
-            let listHTML = '';
-            for (let i = 0; i < 1; i++) {
-                const transposed = transpose(primeRow, i);
-                const notesStr = transposed.map(n => intToNote(n).padEnd(3, ' ')).join(' ');
-                const label = `P${i}`.padEnd(3, ' ');
-                const shift = `(+${i}半音)`.padStart(6, ' ');
-                listHTML += `${label} ${shift}: ${notesStr}\n`;
-            }
-            primeList.textContent = listHTML;
+            // --- 基本形(P0)の描画 ---
+            const notesStr = primeRow.map(n => intToNote(n).padEnd(3, ' ')).join(' ');
+            const label = `P0`.padEnd(3, ' ');
+            primeList.textContent = `${label}: ${notesStr}\n`;
 
-            // --- 2. 12音マトリクスの描画 ---
+            // --- 12音マトリクスの描画 ---
             const firstNote = primeRow[0];
             const iIntervals = primeRow.map(n => (n - firstNote + 12) % 12);
             const pIntervals = iIntervals.map(i => (12 - i) % 12);
