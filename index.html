@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>十二音技法 マトリクスジェネレーター</title>
+    <title>十二音音列 作成ツール</title>
     <!-- Tailwind CSSの読み込み (スタイリング用) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -41,7 +41,7 @@
                         class="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                         placeholder="C C# D D# E F F# G G# A A# B">
                     <button id="generateBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors shadow-sm whitespace-nowrap">
-                        マトリクス生成
+                        マトリクスを生成
                     </button>
                 </div>
                 <p class="text-xs text-gray-500 mt-2">※ フラット (Db, Eb, Gb, Ab, Bb) も入力可能です。</p>
@@ -82,7 +82,7 @@
             <!-- マトリクス表示 -->
             <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b pb-2 mb-4 gap-2">
-                    <h2 class="text-2xl font-bold text-gray-800">12音マトリクス (Tone Row Matrix)</h2>
+                    <h2 class="text-2xl font-bold text-gray-800">音列マトリクス (Tone Row Matrix)</h2>
                     <button id="downloadCsvBtn" class="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors border border-gray-300 shadow-sm flex items-center justify-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
